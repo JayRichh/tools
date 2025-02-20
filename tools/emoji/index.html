@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online emoji picker tool with search, filtering, and quick copy functionality. Browse and search Unicode emoji by category.">
+    <meta name="keywords" content="emoji picker, emoji search, unicode emoji, emoji categories, emoji tool, web utilities">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Emoji Picker Tool - Web Tools">
+    <meta property="og:description" content="Free online emoji picker tool with search, filtering, and quick copy functionality. Browse and search Unicode emoji by category.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jayrich.dev/tools/emoji">
+    <title>Emoji Picker Tool - Web Tools</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="canonical" href="https://jayrich.dev/tools/emoji">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Emoji Picker Tool",
+      "description": "Free online emoji picker tool with search, filtering, and quick copy functionality",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      }
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="../../index.html" class="logo-link">
+                <div class="logo">
+                    <span style="font-size: 24px;">🛠️</span>
+                    <span>Web Tools</span>
+                </div>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="nav-drawer" aria-hidden="true">
+        <div class="nav-drawer-inner">
+            <button class="nav-close" aria-label="Close menu">
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-content">
+                <div class="nav-section">
+                    <a href="../../index.html" class="nav-link">Home</a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools</div>
+                    <a href="../clipboard" class="nav-link">Clipboard</a>
+                    <a href="../emoji" class="nav-link">Emoji Picker</a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">More</div>
+                    <a href="https://jayrich.dev" class="nav-link" target="_blank" rel="noopener noreferrer">jayrich.dev</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <tool-emoji></tool-emoji>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <button class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌞</span>
+                </button>
+            </div>
+            <div class="footer-right">
+                <a href="https://jayrich.dev" target="_blank" rel="noopener noreferrer">jayrich.dev</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../components/tool-emoji.js" type="module"></script>
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        const root = document.documentElement;
+        
+        // Check for saved theme preference or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Set initial theme
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            root.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '🌛';
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            themeIcon.textContent = isDark ? '🌞' : '🌛';
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+    <script src="../../app.js" type="module"></script>
+</body>
+</html>
