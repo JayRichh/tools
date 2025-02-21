@@ -235,8 +235,8 @@ class ToolClipboard extends HTMLElement {
     template.innerHTML = `
       <div class="container">
         <div class="main-content">
-          <h1>Clipboard Paste App</h1>
-          <p>Paste an image using <kbd>Ctrl+V</kbd>, drag & drop, or click the icon below.</p>
+          <h1>Clipboard Paste</h1>
+          <p>Paste an image to download using <kbd>Ctrl+V</kbd>, drag & drop, or click the icon below.</p>
           
           <div id="dropbox">
             <div class="icon" id="dropIcon">

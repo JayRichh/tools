@@ -105,6 +105,45 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+}
+
+.back-button {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  color: var(--light-beige);
+  font-size: 1.125rem;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.back-button span:first-child {
+  font-size: 1.5rem;
+  line-height: 0.8;
+  font-family: monospace;
+  transform: translateX(0);
+  transition: transform var(--transition-speed, 0.3s) var(--transition-timing, cubic-bezier(0.4, 0.0, 0.2, 1));
+}
+
+.back-button:hover span:first-child {
+  transform: translateX(-6px);
+}
+
+.back-button:active span:first-child {
+  transform: translateX(-12px);
+}
+
+.back-button.visible {
+  display: flex;
 }
 
 .logo-link {

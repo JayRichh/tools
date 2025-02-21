@@ -22,6 +22,10 @@
 <body>
     <header>
         <div class="header-content">
+            <button class="back-button" aria-label="Back to home">
+                <span>←</span>
+                <span>Back to Home</span>
+            </button>
             <a href="index.html" class="logo-link">
                 <div class="logo">
                     <span style="font-size: 24px;">🛠️</span>
@@ -87,6 +91,25 @@
 
     <script src="components/tool-card.js" type="module"></script>
     <script>
+        // Back button functionality
+        const backButton = document.querySelector('.back-button');
+        const isRootPage = window.location.pathname === '/' || 
+                          window.location.pathname.endsWith('index.html') ||
+                          window.location.pathname === '/tools/';
+        
+        if (!isRootPage) {
+            backButton.classList.add('visible');
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const transition = () => {
+                    window.location.href = '/tools/';
+                };
+                backButton.style.opacity = '0';
+                backButton.style.transform = 'translate(-50%, -50%) translateX(-8px)';
+                setTimeout(transition, 300);
+            });
+        }
+
         // Theme toggle functionality
         const themeToggle = document.querySelector('.theme-toggle');
         const themeIcon = themeToggle.querySelector('.theme-icon');
