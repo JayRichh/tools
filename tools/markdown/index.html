@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online markdown editor and previewer. Convert Markdown to HTML and vice versa for documentation and blog posts.">
+    <meta name="keywords" content="markdown editor, markdown previewer, markdown to html, web utilities">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Markdown Editor - Web Tools">
+    <meta property="og:description" content="Free online markdown editor and previewer. Convert Markdown to HTML and vice versa for documentation and blog posts.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jayrich.dev/tools/markdown">
+    <title>Markdown Editor - Web Tools</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="canonical" href="https://jayrich.dev/tools/markdown">
+    <link rel="icon" href="../../logo-bg-128.png" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <button class="back-button" aria-label="Back to home">
+                <span>←</span>
+                <span>Back to Home</span>
+            </button>
+            <a href="../../index.html" class="logo-link">
+                <div class="logo">
+                    <img src="../../logo-bg-128.png" alt="Web Tools Logo" width="24" height="24">
+                    <span>Web Tools</span>
+                </div>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="nav-drawer" aria-hidden="true">
+        <div class="nav-drawer-inner">
+            <button class="nav-close" aria-label="Close menu">
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-content">
+                <div class="nav-section">
+                    <a href="../../index.html" class="nav-link">Home</a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools</div>
+                    <a href="../clipboard" class="nav-link">Clipboard</a>
+                    <a href="../emoji" class="nav-link">Emoji Picker</a>
+                    <a href="../timezone" class="nav-link">TimeSync</a>
+                    <a href="../text-transform" class="nav-link">Text Transform</a>
+                    <a href="../code-tools" class="nav-link">Code Tools</a>
+                    <a href="../markdown" class="nav-link">Markdown Editor</a>
+                    <a href="../color-picker" class="nav-link">Color Picker</a>
+                    <a href="../password" class="nav-link">Password Generator</a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">More</div>
+                    <a href="https://jayrich.dev" class="nav-link" target="_blank" rel="noopener noreferrer">jayrich.dev</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <tool-markdown></tool-markdown>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <button class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌞</span>
+                </button>
+            </div>
+            <div class="footer-right">
+                <a href="https://jayrich.dev" target="_blank" rel="noopener noreferrer">jayrich.dev</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../components/tool-markdown.js" type="module"></script>
+    <script>
+        // Back button functionality
+        const backButton = document.querySelector('.back-button');
+        backButton.classList.add('visible');
+        backButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const transition = () => {
+                window.location.href = '../../index.html';
+            };
+            backButton.style.opacity = '0';
+            backButton.style.transform = 'translate(-50%, -50%) translateX(-8px)';
+            setTimeout(transition, 300);
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        
+        // Check for saved theme preference or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Set initial theme
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '🌛';
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeIcon.textContent = isDark ? '🌞' : '🌛';
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+    <script src="../../app.js" type="module"></script>
+</body>
+</html>

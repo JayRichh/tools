@@ -69,616 +69,142 @@ class ToolTimezone extends HTMLElement {
       { acronym: "Z", meaning: "Zulu Time (Military/Aviation for UTC)" }
     ];
 
-    const style = document.createElement('style');
-    style.textContent = `
-      :host {
-        display: block;
-        height: 100%;
-        position: relative;
-        isolation: isolate;
-        width: 100%;
-      }
-      
-      .container {
-        height: 100%;
-        width: 100%;
-        position: relative;
-        background: var(--light-beige);
-        border-radius: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        padding: 1.5rem;
-        box-sizing: border-box;
-      }
-      
-      .dashboard {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: 1fr;
-      }
-      
-      @media (min-width: 992px) {
-        .dashboard {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-      
-      .section {
-        margin-bottom: 2rem;
-      }
-      
-      .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--sage);
-      }
-      
-      .section-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0;
-        color: var(--dark-sage);
-      }
-      
-      .section-icon {
-        font-size: 1.5rem;
-      }
-      
-      .subsection-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--dark-sage);
-        margin: 1.5rem 0 0.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--sage);
-      }
-      
-      .time-display {
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-align: center;
-        margin: 0.5rem 0;
-        color: var(--dark-sage);
-        line-height: 1;
-      }
-      
-      .date-display {
-        text-align: center;
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
-        color: var(--dark-sage);
-      }
-      
-      .timezone-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin: 0 auto;
-        padding: 0.5rem 1rem;
-        background: var(--vanilla);
-        border-radius: 2rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-      
-      .timezone-name {
-        font-weight: 600;
-        font-size: 1rem;
-        color: var(--dark-sage);
-      }
-      
-      .timezone-offset {
-        font-family: monospace;
-        font-weight: 600;
-        color: var(--dark-sage);
-      }
-      
-      .time-info-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 1.5rem;
-      }
-      
-      .alt-units-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 0.75rem;
-        margin-top: 0.75rem;
-      }
-      
-      .alt-unit-item {
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        background: var(--vanilla);
-        transition: all 0.2s;
-      }
-      
-      .alt-unit-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      
-      .alt-unit-name {
-        font-weight: 600;
-        color: var(--dark-sage);
-        margin-bottom: 0.25rem;
-      }
-      
-      .alt-unit-examples {
-        font-style: italic;
-        font-size: 0.9rem;
-        color: var(--dark-sage);
-      }
-      
-      .event-form {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      
-      @media (min-width: 768px) {
-        .event-form {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-      
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      
-      .form-group.full-width {
-        grid-column: 1 / -1;
-      }
-      
-      label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: var(--dark-sage);
-      }
-      
-      input[type="text"],
-      input[type="date"],
-      input[type="time"],
-      select {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-        border: 2px solid var(--sage);
-        border-radius: 0.75rem;
-        background: var(--vanilla);
-        color: var(--dark-sage);
-        transition: all 0.2s;
-        box-sizing: border-box;
-      }
-      
-      input[type="text"]:focus,
-      input[type="date"]:focus,
-      input[type="time"]:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--buff);
-        box-shadow: 0 0 0 3px rgba(216, 164, 143, 0.2);
-      }
-      
-      select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b6b54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 1.25rem;
-        padding-right: 2.5rem;
-      }
-      
-      [data-theme="dark"] select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d1d1b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      }
-      
-      button {
-        background: var(--buff);
-        border: none;
-        color: white;
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.75rem;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      
-      button:hover {
-        background: var(--deep-buff);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      
-      button:active {
-        transform: translateY(0);
-      }
-      
-      .button-container {
-        grid-column: 1 / -1;
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 0.5rem;
-      }
-      
-      .countdown-container {
-        margin-top: 1.5rem;
-        text-align: center;
-      }
-      
-      .countdown-title {
-        font-weight: 700;
-        margin-bottom: 1rem;
-        font-size: 1.25rem;
-        color: var(--dark-sage);
-      }
-      
-      .countdown-units {
-        display: flex;
-        justify-content: center;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.25rem;
-      }
-      
-      .countdown-unit {
-        background: var(--vanilla);
-        padding: 0.75rem;
-        border-radius: 0.75rem;
-        min-width: 4rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-      
-      .unit-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--dark-sage);
-      }
-      
-      .unit-label {
-        font-size: 0.875rem;
-        opacity: 0.9;
-        margin-top: 0.25rem;
-        color: var(--dark-sage);
-      }
-      
-      .event-local-time {
-        margin-top: 1rem;
-        font-size: 1.1rem;
-        color: var(--dark-sage);
-      }
-      
-      .recent-events {
-        margin-top: 1.5rem;
-      }
-      
-      .recent-event-item {
-        background: var(--vanilla);
-        border-radius: 0.75rem;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      
-      .recent-event-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      
-      .recent-event-item.active {
-        border-left: 4px solid var(--buff);
-      }
-      
-      .recent-event-name {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--dark-sage);
-        margin-bottom: 0.5rem;
-      }
-      
-      .recent-event-details {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.9rem;
-        color: var(--dark-sage);
-      }
-      
-      .recent-event-time {
-        font-family: monospace;
-      }
-      
-      .reference-section {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      
-      @media (min-width: 768px) {
-        .reference-section {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-      
-      .search-wrapper {
-        position: relative;
-        margin-bottom: 1rem;
-      }
-      
-      .search-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1.25rem;
-        height: 1.25rem;
-        color: var(--sage);
-        pointer-events: none;
-      }
-      
-      .search-input {
-        width: 100%;
-        padding: 0.75rem 1rem 0.75rem 2.75rem;
-        font-size: 1rem;
-        border: 2px solid var(--sage);
-        border-radius: 0.75rem;
-        background: var(--vanilla);
-        color: var(--dark-sage);
-        transition: all 0.2s;
-        box-sizing: border-box;
-      }
-      
-      .search-input:focus {
-        outline: none;
-        border-color: var(--buff);
-        box-shadow: 0 0 0 3px rgba(216, 164, 143, 0.2);
-      }
-      
-      .countries-list {
-        max-height: 250px;
-        overflow-y: auto;
-        border-radius: 0.75rem;
-        background: var(--vanilla);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-      
-      .country-item {
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--sage);
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      .country-item:last-child {
-        border-bottom: none;
-      }
-      
-      .country-item:hover {
-        background: rgba(0, 0, 0, 0.05);
-      }
-      
-      .country-name {
-        font-weight: 600;
-        color: var(--dark-sage);
-      }
-      
-      .country-offset {
-        font-family: monospace;
-        opacity: 0.9;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-size: 0.875rem;
-        color: var(--dark-sage);
-      }
-      
-      .sayings-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .saying {
-        background: var(--vanilla);
-        border-left: 3px solid var(--buff);
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        font-style: italic;
-        color: var(--dark-sage);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-      
-      .acronym-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 0.75rem;
-      }
-      
-      .acronym-item {
-        background: var(--vanilla);
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-        transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .acronym-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      
-      .acronym {
-        font-weight: 700;
-        color: var(--dark-sage);
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        display: inline-block;
-      }
-      
-      .acronym-meaning {
-        font-size: 0.9rem;
-        color: var(--dark-sage);
-        line-height: 1.4;
-      }
-      
-      .hidden {
-        display: none;
-      }
-      
-      @media (max-width: 768px) {
-        .time-display {
-          font-size: 2.5rem;
-        }
-        
-        .countdown-units {
-          gap: 0.5rem;
-        }
-        
-        .countdown-unit {
-          min-width: 4rem;
-        }
-      }
-    `;
+    // Load external stylesheet
+    const linkElem = document.createElement('link');
+    linkElem.setAttribute('rel', 'stylesheet');
+    linkElem.setAttribute('href', '../../styles/tool-timezone.css');
     
     const template = document.createElement('template');
     template.innerHTML = `
       <div class="container">
         <div class="dashboard">
-          <div class="section">
-            <div class="section-header">
-              <h2 class="section-title">Current Time</h2>
-              <div class="section-icon">🕒</div>
+          <!-- Current Time Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-icon">🕒</span>Current Time</h2>
             </div>
-            
-            <div class="time-info-container">
-              <div class="time-display" id="local-time">00:00:00</div>
-              <div class="date-display" id="local-date">Loading...</div>
-              <div class="timezone-badge">
-                <span class="timezone-name" id="timezone-name">Detecting timezone...</span>
-                <span class="timezone-offset" id="timezone-offset">UTC+00:00</span>
-              </div>
-            </div>
-            
-            <div class="subsection-title">Alternative Time Units</div>
-            <div class="alt-units-grid" id="alt-units-list"></div>
-          </div>
-          
-          <div class="section">
-            <div class="section-header">
-              <h2 class="section-title">Event Planner</h2>
-              <div class="section-icon">📅</div>
-            </div>
-            
-            <form class="event-form" id="event-form">
-              <div class="form-group">
-                <label for="event-name">Event Name</label>
-                <input type="text" id="event-name" placeholder="Meeting, Conference, etc.">
-              </div>
-              <div class="form-group">
-                <label for="event-date">Date</label>
-                <input type="date" id="event-date">
-              </div>
-              <div class="form-group">
-                <label for="event-time">Time</label>
-                <input type="time" id="event-time">
-              </div>
-              <div class="form-group">
-                <label for="event-timezone">Timezone</label>
-                <select id="event-timezone">
-                  <option value="">Loading timezones...</option>
-                </select>
-              </div>
-              <div class="button-container">
-                <button type="submit" id="set-event-btn">Set Event</button>
-              </div>
-            </form>
-            
-            <div class="countdown-container hidden" id="countdown-container">
-              <div class="countdown-title" id="countdown-title">Time until Event</div>
-              <div class="countdown-units">
-                <div class="countdown-unit">
-                  <span class="unit-value" id="days-value">0</span>
-                  <span class="unit-label">Days</span>
+            <div class="card-body">
+              <div class="time-info-container">
+                <div class="time-display" id="local-time">00:00:00</div>
+                <div class="date-display" id="local-date">Loading...</div>
+                <div class="timezone-badge">
+                  <span class="timezone-name" id="timezone-name">Detecting timezone...</span>
+                  <span class="timezone-offset" id="timezone-offset">UTC+00:00</span>
                 </div>
-                <div class="countdown-unit">
-                  <span class="unit-value" id="hours-value">0</span>
-                  <span class="unit-label">Hours</span>
-                </div>
-                <div class="countdown-unit">
-                  <span class="unit-value" id="minutes-value">0</span>
-                  <span class="unit-label">Minutes</span>
-                </div>
-                <div class="countdown-unit">
-                  <span class="unit-value" id="seconds-value">0</span>
-                  <span class="unit-label">Seconds</span>
-                </div>
-              </div>
-              <div class="event-local-time" id="event-local-time">
-                This event will be at <strong>00:00</strong> your local time
-              </div>
-            </div>
-            
-            <div class="subsection-title">Recent Events</div>
-            <div class="recent-events" id="recent-events">
-              <div class="no-events">No recent events</div>
-            </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-header">
-              <h2 class="section-title">Country Lookup</h2>
-              <div class="section-icon">🌍</div>
-            </div>
-            
-            <div class="search-wrapper">
-              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" class="search-input" id="country-search" placeholder="Search countries...">
-            </div>
-            
-            <div class="countries-list" id="countries-list">
-              <div class="country-item">
-                <span class="country-name">Loading countries...</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="section">
-            <div class="section-header">
-              <h2 class="section-title">Reference</h2>
-              <div class="section-icon">📚</div>
-            </div>
-            
-            <div class="reference-section">
-              <div>
-                <div class="subsection-title">Timezone Sayings</div>
-                <div class="sayings-list" id="sayings-list"></div>
               </div>
               
-              <div>
-                <div class="subsection-title">Common Acronyms</div>
-                <div class="acronym-list" id="acronym-list"></div>
+              <div class="section-title">Alternative Time Units</div>
+              <div class="alt-units-grid" id="alt-units-list"></div>
+            </div>
+          </div>
+          
+          <!-- Event Planner Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-icon">📅</span>Event Planner</h2>
+            </div>
+            <div class="card-body">
+              <form class="event-form" id="event-form">
+                <div class="form-group">
+                  <label for="event-name">Event Name</label>
+                  <input type="text" id="event-name" placeholder="Meeting, Conference, etc.">
+                </div>
+                <div class="form-group">
+                  <label for="event-date">Date</label>
+                  <input type="date" id="event-date">
+                </div>
+                <div class="form-group">
+                  <label for="event-time">Time</label>
+                  <input type="time" id="event-time">
+                </div>
+                <div class="form-group">
+                  <label for="event-timezone">Timezone</label>
+                  <select id="event-timezone">
+                    <option value="">Loading timezones...</option>
+                  </select>
+                </div>
+                <div class="button-container">
+                  <button type="submit" id="set-event-btn">Set Event</button>
+                </div>
+              </form>
+              
+              <div class="countdown-container hidden" id="countdown-container">
+                <div class="countdown-title" id="countdown-title">Time until Event</div>
+                <div class="countdown-units">
+                  <div class="countdown-unit">
+                    <span class="unit-value" id="days-value">0</span>
+                    <span class="unit-label">Days</span>
+                  </div>
+                  <div class="countdown-unit">
+                    <span class="unit-value" id="hours-value">0</span>
+                    <span class="unit-label">Hours</span>
+                  </div>
+                  <div class="countdown-unit">
+                    <span class="unit-value" id="minutes-value">0</span>
+                    <span class="unit-label">Minutes</span>
+                  </div>
+                  <div class="countdown-unit">
+                    <span class="unit-value" id="seconds-value">0</span>
+                    <span class="unit-label">Seconds</span>
+                  </div>
+                </div>
+                <div class="event-local-time" id="event-local-time">
+                  This event will be at <strong>00:00</strong> your local time
+                </div>
+              </div>
+              
+              <div class="section-title">Recent Events</div>
+              <div class="recent-events" id="recent-events">
+                <div class="no-events">No recent events</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Country Lookup Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-icon">🌍</span>Country Lookup</h2>
+            </div>
+            <div class="card-body">
+              <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="search-input" id="country-search" placeholder="Search countries...">
+              </div>
+              
+              <div class="countries-list" id="countries-list">
+                <div class="country-item">
+                  <span class="country-name">Loading countries...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Reference Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-icon">📚</span>Reference</h2>
+            </div>
+            <div class="card-body">
+              <div class="reference-section">
+                <div>
+                  <div class="section-title">Timezone Sayings</div>
+                  <div class="sayings-list" id="sayings-list"></div>
+                </div>
+                
+                <div>
+                  <div class="section-title">Common Acronyms</div>
+                  <div class="acronym-list" id="acronym-list"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     `;
-    this.shadowRoot.appendChild(style);
+    this.shadowRoot.appendChild(linkElem);
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
   
