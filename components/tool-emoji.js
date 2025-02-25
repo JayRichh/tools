@@ -1,4 +1,4 @@
-import '../../components/emoji-rain.js'
+import './emoji-rain.js'
 
 class ToolEmoji extends HTMLElement {
   constructor() {
