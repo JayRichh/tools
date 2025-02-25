@@ -13,13 +13,17 @@ class ToolClipboard extends HTMLElement {
         flex: 1;
         display: flex;
         align-items: center;
+        box-sizing: border-box;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
       }
 
       .container {
         width: 100%;
-        max-width: 84rem;
-        margin: 0 auto;
-        padding: 0 var(--content-spacing);
+        position: relative;
+        padding: 1rem 0;
       }
 
       .main-content {
@@ -29,6 +33,7 @@ class ToolClipboard extends HTMLElement {
         padding: 1rem;
         width: min(100%, 600px);
         margin: 0 auto;
+        max-width: 100%;
       }
 
       h1 {
@@ -81,6 +86,7 @@ class ToolClipboard extends HTMLElement {
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
       }
 
       #dropbox.hover {
@@ -139,7 +145,9 @@ class ToolClipboard extends HTMLElement {
       img {
         display: block;
         max-width: 100%;
+        max-height: 100%;
         height: auto;
+        width: auto;
         object-fit: contain;
         border-radius: 0.5rem;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -205,6 +213,16 @@ class ToolClipboard extends HTMLElement {
         }
       }
 
+      @media (min-width: 1600px) {
+        .main-content {
+          width: min(100%, 800px);
+        }
+        
+        #dropbox {
+          min-height: 400px;
+        }
+      }
+
       @media (max-width: 480px) {
         .main-content {
           gap: 1rem;
@@ -227,6 +245,10 @@ class ToolClipboard extends HTMLElement {
         button {
           width: 100%;
           min-width: 0;
+        }
+        
+        #dropbox {
+          min-height: 250px;
         }
       }
     `
@@ -368,7 +390,7 @@ class ToolClipboard extends HTMLElement {
     }
   }
 
-  async handleCopy() {
+  async handleCopy(e) {
     if (!this.currentImage) {
       this.showNotification('No image to copy', 'error')
       return
@@ -383,6 +405,15 @@ class ToolClipboard extends HTMLElement {
         })
       ])
       this.showNotification('Image copied to clipboard')
+      
+      // Trigger burst animation
+      const rainBackground = document.querySelector('emoji-rain-background')
+      if (rainBackground && e) {
+        const rect = this.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+        rainBackground.burstEmoji('📋', x, y)
+      }
     } catch (error) {
       console.error('Failed to copy image:', error)
       this.showNotification('Failed to copy image', 'error')

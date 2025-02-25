@@ -3,31 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free online emoji picker tool with search, filtering, and quick copy functionality. Browse and search Unicode emoji by category.">
-    <meta name="keywords" content="emoji picker, emoji search, unicode emoji, emoji categories, emoji tool, web utilities">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Emoji Picker Tool - Web Tools">
-    <meta property="og:description" content="Free online emoji picker tool with search, filtering, and quick copy functionality. Browse and search Unicode emoji by category.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jayrich.dev/tools/emoji">
-    <title>Emoji Picker Tool - Web Tools</title>
+    <title>TimeSync Tool - Web Tools</title>
+    <meta name="description" content="Timezone converter, event countdown, and global time reference tool. Plan events across timezones with ease.">
+    <link rel="icon" type="image/svg+xml" href="../../logo.svg">
     <link rel="stylesheet" href="../../style.css">
-    <link rel="canonical" href="https://jayrich.dev/tools/emoji">
-    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Emoji Picker Tool",
-      "description": "Free online emoji picker tool with search, filtering, and quick copy functionality",
-      "applicationCategory": "UtilityApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0"
-      }
-    }
-    </script>
+    
+    <meta property="og:title" content="TimeSync Tool - Web Tools">
+    <meta property="og:description" content="TimeSync converter, event countdown, and global time reference tool. Plan events across timezones with ease.">
+    <meta property="og:image" content="https://jayrichh.github.io/tools/logo.svg">
+    <meta property="og:url" content="https://jayrichh.github.io/tools/timezone/">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Timezone Tool - Web Tools">
+    <meta name="twitter:description" content="Timezone converter, event countdown, and global time reference tool. Plan events across timezones with ease.">
+    <meta name="twitter:image" content="https://jayrichh.github.io/tools/logo.svg">
 </head>
 <body>
     <header>
@@ -63,8 +53,8 @@
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Tools</div>
-                    <a href="../clipboard" class="nav-link">Clipboard</a>
-                    <a href="../emoji" class="nav-link">Emoji Picker</a>
+                    <a href="../clipboard/" class="nav-link">Clipboard</a>
+                    <a href="../emoji/" class="nav-link">Emoji Picker</a>
                     <a href="../timezone/" class="nav-link">TimeSync</a>
                 </div>
 
@@ -77,7 +67,7 @@
     </nav>
 
     <main>
-        <tool-emoji></tool-emoji>
+        <tool-timezone></tool-timezone>
     </main>
 
     <footer>
@@ -93,7 +83,7 @@
         </div>
     </footer>
 
-    <script src="../../components/tool-emoji.js" type="module"></script>
+    <script src="../../components/tool-timezone.js" type="module"></script>
     <script>
         // Back button functionality
         const backButton = document.querySelector('.back-button');
@@ -111,7 +101,6 @@
         // Theme toggle functionality
         const themeToggle = document.querySelector('.theme-toggle');
         const themeIcon = themeToggle.querySelector('.theme-icon');
-        const root = document.documentElement;
         
         // Check for saved theme preference or system preference
         const savedTheme = localStorage.getItem('theme');
@@ -119,19 +108,34 @@
         
         // Set initial theme
         if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-            root.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
             themeIcon.textContent = '🌛';
         }
         
         // Toggle theme
         themeToggle.addEventListener('click', () => {
-            const isDark = root.getAttribute('data-theme') === 'dark';
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const newTheme = isDark ? 'light' : 'dark';
-            root.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
             themeIcon.textContent = isDark ? '🌞' : '🌛';
             localStorage.setItem('theme', newTheme);
         });
+
+        // Menu toggle functionality
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navDrawer = document.querySelector('.nav-drawer');
+        const navClose = document.querySelector('.nav-close');
+        
+        menuToggle.addEventListener('click', () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            navDrawer.setAttribute('aria-hidden', isExpanded);
+        });
+        
+        navClose.addEventListener('click', () => {
+            menuToggle.setAttribute('aria-expanded', 'false');
+            navDrawer.setAttribute('aria-hidden', 'true');
+        });
     </script>
-    <script src="../../app.js" type="module"></script>
 </body>
 </html>

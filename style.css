@@ -40,6 +40,7 @@
   --header-height: 4rem;
   --footer-height: 3.5rem;
   --max-width: 80rem;
+  --ultrawide-max-width: 100rem;
   --card-min-width: 18rem;
   --content-spacing: clamp(1rem, 3vw, 2rem);
   
@@ -68,7 +69,7 @@
   }
 }
 
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -86,6 +87,7 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  overflow-x: hidden;
 }
 
 header {
@@ -95,6 +97,7 @@ header {
   top: 0;
   z-index: var(--layer-header);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .header-content {
@@ -181,8 +184,11 @@ header {
   letter-spacing: -0.02em;
 }
 
-.logo span[style*="font-size"] {
-  font-size: clamp(2rem, 4vw, 2.5rem) !important;
+.logo img {
+  width: clamp(32px, 5vw, 48px);
+  height: auto;
+  object-fit: contain;
+  vertical-align: middle;
 }
 
 .menu-toggle {
@@ -421,6 +427,7 @@ footer {
   background: var(--sage);
   margin-top: auto;
   height: var(--footer-height);
+  width: 100%;
 }
 
 .footer-content {
@@ -472,6 +479,38 @@ footer {
 
 .footer-right a:hover {
   opacity: 1;
+}
+
+/* Ultrawide monitor support */
+@media (min-width: 1921px) {
+  main {
+    max-width: var(--ultrawide-max-width);
+  }
+  
+  .header-content,
+  .nav-drawer-inner,
+  .footer-content {
+    max-width: var(--ultrawide-max-width);
+  }
+  
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  :root {
+    --content-spacing: 1rem;
+  }
+  
+  main {
+    padding: 1.5rem var(--content-spacing);
+  }
+  
+  .tools-grid {
+    gap: 1.5rem;
+  }
 }
 
 @media (hover: hover) {

@@ -1,0 +1,247 @@
+[
+  {
+    "name": "United States",
+    "timezone": "America/New_York",
+    "timezone_offset": "UTC-05:00"
+  },
+  {
+    "name": "United States (Pacific)",
+    "timezone": "America/Los_Angeles",
+    "timezone_offset": "UTC-08:00"
+  },
+  {
+    "name": "United Kingdom",
+    "timezone": "Europe/London",
+    "timezone_offset": "UTC+00:00"
+  },
+  {
+    "name": "France",
+    "timezone": "Europe/Paris",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Germany",
+    "timezone": "Europe/Berlin",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Spain",
+    "timezone": "Europe/Madrid",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Italy",
+    "timezone": "Europe/Rome",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Russia",
+    "timezone": "Europe/Moscow",
+    "timezone_offset": "UTC+03:00"
+  },
+  {
+    "name": "China",
+    "timezone": "Asia/Shanghai",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "Japan",
+    "timezone": "Asia/Tokyo",
+    "timezone_offset": "UTC+09:00"
+  },
+  {
+    "name": "South Korea",
+    "timezone": "Asia/Seoul",
+    "timezone_offset": "UTC+09:00"
+  },
+  {
+    "name": "India",
+    "timezone": "Asia/Kolkata",
+    "timezone_offset": "UTC+05:30"
+  },
+  {
+    "name": "Australia (East)",
+    "timezone": "Australia/Sydney",
+    "timezone_offset": "UTC+10:00"
+  },
+  {
+    "name": "Australia (West)",
+    "timezone": "Australia/Perth",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "New Zealand",
+    "timezone": "Pacific/Auckland",
+    "timezone_offset": "UTC+12:00"
+  },
+  {
+    "name": "Brazil",
+    "timezone": "America/Sao_Paulo",
+    "timezone_offset": "UTC-03:00"
+  },
+  {
+    "name": "Argentina",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "timezone_offset": "UTC-03:00"
+  },
+  {
+    "name": "Mexico",
+    "timezone": "America/Mexico_City",
+    "timezone_offset": "UTC-06:00"
+  },
+  {
+    "name": "Canada (East)",
+    "timezone": "America/Toronto",
+    "timezone_offset": "UTC-05:00"
+  },
+  {
+    "name": "Canada (West)",
+    "timezone": "America/Vancouver",
+    "timezone_offset": "UTC-08:00"
+  },
+  {
+    "name": "South Africa",
+    "timezone": "Africa/Johannesburg",
+    "timezone_offset": "UTC+02:00"
+  },
+  {
+    "name": "Egypt",
+    "timezone": "Africa/Cairo",
+    "timezone_offset": "UTC+02:00"
+  },
+  {
+    "name": "Israel",
+    "timezone": "Asia/Jerusalem",
+    "timezone_offset": "UTC+02:00"
+  },
+  {
+    "name": "United Arab Emirates",
+    "timezone": "Asia/Dubai",
+    "timezone_offset": "UTC+04:00"
+  },
+  {
+    "name": "Singapore",
+    "timezone": "Asia/Singapore",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "Hong Kong",
+    "timezone": "Asia/Hong_Kong",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "Thailand",
+    "timezone": "Asia/Bangkok",
+    "timezone_offset": "UTC+07:00"
+  },
+  {
+    "name": "Indonesia",
+    "timezone": "Asia/Jakarta",
+    "timezone_offset": "UTC+07:00"
+  },
+  {
+    "name": "Philippines",
+    "timezone": "Asia/Manila",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "Malaysia",
+    "timezone": "Asia/Kuala_Lumpur",
+    "timezone_offset": "UTC+08:00"
+  },
+  {
+    "name": "Vietnam",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "timezone_offset": "UTC+07:00"
+  },
+  {
+    "name": "Turkey",
+    "timezone": "Europe/Istanbul",
+    "timezone_offset": "UTC+03:00"
+  },
+  {
+    "name": "Greece",
+    "timezone": "Europe/Athens",
+    "timezone_offset": "UTC+02:00"
+  },
+  {
+    "name": "Sweden",
+    "timezone": "Europe/Stockholm",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Norway",
+    "timezone": "Europe/Oslo",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Finland",
+    "timezone": "Europe/Helsinki",
+    "timezone_offset": "UTC+02:00"
+  },
+  {
+    "name": "Denmark",
+    "timezone": "Europe/Copenhagen",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Poland",
+    "timezone": "Europe/Warsaw",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Netherlands",
+    "timezone": "Europe/Amsterdam",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Belgium",
+    "timezone": "Europe/Brussels",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Switzerland",
+    "timezone": "Europe/Zurich",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Austria",
+    "timezone": "Europe/Vienna",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Czech Republic",
+    "timezone": "Europe/Prague",
+    "timezone_offset": "UTC+01:00"
+  },
+  {
+    "name": "Ireland",
+    "timezone": "Europe/Dublin",
+    "timezone_offset": "UTC+00:00"
+  },
+  {
+    "name": "Portugal",
+    "timezone": "Europe/Lisbon",
+    "timezone_offset": "UTC+00:00"
+  },
+  {
+    "name": "Iceland",
+    "timezone": "Atlantic/Reykjavik",
+    "timezone_offset": "UTC+00:00"
+  },
+  {
+    "name": "Hawaii",
+    "timezone": "Pacific/Honolulu",
+    "timezone_offset": "UTC-10:00"
+  },
+  {
+    "name": "Alaska",
+    "timezone": "America/Anchorage",
+    "timezone_offset": "UTC-09:00"
+  },
+  {
+    "name": "Fiji",
+    "timezone": "Pacific/Fiji",
+    "timezone_offset": "UTC+12:00"
+  }
+]
