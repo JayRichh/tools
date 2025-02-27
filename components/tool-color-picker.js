@@ -15,18 +15,34 @@ class ToolColorPicker extends HTMLElement {
           <h1>Color Picker & Converter</h1>
           <p>Select colors and convert between formats for design consistency</p>
           
-          <div class="color-picker-container">
-            <div class="color-picker-panel">
-              <div class="color-preview-container">
-                <div class="color-preview" id="color-preview"></div>
-                <div class="color-info">
-                  <div class="color-value" id="color-hex">#FFFFFF</div>
-                  <div class="color-value" id="color-rgb">rgb(255, 255, 255)</div>
-                  <div class="color-value" id="color-hsl">hsl(0, 0%, 100%)</div>
-                </div>
+          <!-- Main color display and controls -->
+          <div class="color-display-section">
+            <div class="color-preview-wrapper">
+              <div class="color-preview" id="color-preview"></div>
+              <div class="eyedropper-tool" id="eyedropper-tool" title="Pick color from screen">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <path d="M17.5 5.5L19 7l-9.5 9.5-5 1L5.5 13 15 3.5l2.5 2zM14 6.5L7.5 13M16 9l2 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </div>
-              
-              <div class="color-input-container">
+            </div>
+            
+            <div class="color-values">
+              <div class="color-value-container">
+                <div class="color-value" id="color-hex" title="Click to copy">#FFFFFF</div>
+                <div class="color-value" id="color-rgb" title="Click to copy">rgb(255, 255, 255)</div>
+                <div class="color-value" id="color-hsl" title="Click to copy">hsl(0, 0%, 100%)</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Color input methods -->
+          <div class="color-input-section">
+            <div class="input-section-header">
+              <h2>Color Input</h2>
+            </div>
+            
+            <div class="input-methods">
+              <div class="input-method">
                 <div class="color-input-group">
                   <label for="color-picker-input">Color Picker</label>
                   <input type="color" id="color-picker-input" value="#FFFFFF">
@@ -36,77 +52,95 @@ class ToolColorPicker extends HTMLElement {
                   <label for="hex-input">HEX</label>
                   <input type="text" id="hex-input" placeholder="#FFFFFF" value="#FFFFFF">
                 </div>
-                
-                <div class="color-input-row">
-                  <div class="color-input-group">
-                    <label for="r-input">R</label>
+              </div>
+              
+              <div class="input-method">
+                <div class="input-method-header">RGB</div>
+                <div class="slider-inputs">
+                  <div class="slider-input">
+                    <label for="r-slider">R</label>
+                    <input type="range" id="r-slider" min="0" max="255" value="255" class="color-slider red-slider">
                     <input type="number" id="r-input" min="0" max="255" value="255">
                   </div>
                   
-                  <div class="color-input-group">
-                    <label for="g-input">G</label>
+                  <div class="slider-input">
+                    <label for="g-slider">G</label>
+                    <input type="range" id="g-slider" min="0" max="255" value="255" class="color-slider green-slider">
                     <input type="number" id="g-input" min="0" max="255" value="255">
                   </div>
                   
-                  <div class="color-input-group">
-                    <label for="b-input">B</label>
+                  <div class="slider-input">
+                    <label for="b-slider">B</label>
+                    <input type="range" id="b-slider" min="0" max="255" value="255" class="color-slider blue-slider">
                     <input type="number" id="b-input" min="0" max="255" value="255">
                   </div>
                 </div>
-                
-                <div class="color-input-row">
-                  <div class="color-input-group">
-                    <label for="h-input">H</label>
+              </div>
+              
+              <div class="input-method">
+                <div class="input-method-header">HSL</div>
+                <div class="slider-inputs">
+                  <div class="slider-input">
+                    <label for="h-slider">H</label>
+                    <input type="range" id="h-slider" min="0" max="360" value="0" class="color-slider hue-slider">
                     <input type="number" id="h-input" min="0" max="360" value="0">
                   </div>
                   
-                  <div class="color-input-group">
-                    <label for="s-input">S</label>
+                  <div class="slider-input">
+                    <label for="s-slider">S</label>
+                    <input type="range" id="s-slider" min="0" max="100" value="0" class="color-slider saturation-slider">
                     <input type="number" id="s-input" min="0" max="100" value="0">
                   </div>
                   
-                  <div class="color-input-group">
-                    <label for="l-input">L</label>
+                  <div class="slider-input">
+                    <label for="l-slider">L</label>
+                    <input type="range" id="l-slider" min="0" max="100" value="100" class="color-slider lightness-slider">
                     <input type="number" id="l-input" min="0" max="100" value="100">
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div class="color-palette-panel">
-              <div class="panel-header">
-                <h2>Color Palette</h2>
+          </div>
+          
+          <!-- Palette generator -->
+          <div class="palette-section">
+            <div class="section-header">
+              <h2>Color Palette</h2>
+              <div class="palette-controls">
+                <select id="palette-type" class="palette-type-select">
+                  <option value="monochromatic">Monochromatic</option>
+                  <option value="analogous">Analogous</option>
+                  <option value="complementary">Complementary</option>
+                  <option value="triadic">Triadic</option>
+                  <option value="tetradic">Tetradic</option>
+                </select>
                 <button class="action-button" id="generate-palette">Generate</button>
               </div>
-              
-              <div class="palette-type-selector">
-                <button class="palette-type-button active" data-type="monochromatic">Monochromatic</button>
-                <button class="palette-type-button" data-type="analogous">Analogous</button>
-                <button class="palette-type-button" data-type="complementary">Complementary</button>
-                <button class="palette-type-button" data-type="triadic">Triadic</button>
+            </div>
+            
+            <div class="temperature-control">
+              <label for="temperature-slider">Color Temperature: <span id="temperature-value">Neutral</span></label>
+              <input type="range" id="temperature-slider" min="-100" max="100" value="0" step="10" class="temperature-slider">
+              <div class="temperature-labels">
+                <span>Cool</span>
+                <span>Neutral</span>
+                <span>Warm</span>
               </div>
-              
-              <div class="temperature-slider-container">
-                <label for="temperature-slider">Color Temperature: <span id="temperature-value">Neutral</span></label>
-                <input type="range" id="temperature-slider" min="-100" max="100" value="0" step="10">
-                <div class="temperature-labels">
-                  <span>Cool</span>
-                  <span>Neutral</span>
-                  <span>Warm</span>
-                </div>
-              </div>
-              
-              <div class="color-palette" id="color-palette"></div>
-              
-              <div class="palette-actions">
-                <button class="secondary-button" id="copy-palette">Copy Palette</button>
-                <button class="secondary-button" id="save-palette">Save Palette</button>
-              </div>
+            </div>
+            
+            <div class="color-palette" id="color-palette"></div>
+            
+            <div class="palette-actions">
+              <button class="action-button" id="copy-palette">Copy Palette</button>
+              <button class="action-button" id="save-palette">Save Palette</button>
             </div>
           </div>
           
-          <div class="saved-palettes-container">
-            <h2>Saved Palettes</h2>
+          <!-- Saved palettes -->
+          <div class="saved-palettes-section">
+            <div class="section-header">
+              <h2>Saved Palettes</h2>
+            </div>
             <div class="saved-palettes" id="saved-palettes"></div>
           </div>
         </div>
@@ -137,26 +171,44 @@ class ToolColorPicker extends HTMLElement {
     
     this.colorPickerInput = this.shadowRoot.getElementById('color-picker-input');
     this.hexInput = this.shadowRoot.getElementById('hex-input');
+    this.eyedropperTool = this.shadowRoot.getElementById('eyedropper-tool');
     
+    // RGB inputs and sliders
     this.rInput = this.shadowRoot.getElementById('r-input');
     this.gInput = this.shadowRoot.getElementById('g-input');
     this.bInput = this.shadowRoot.getElementById('b-input');
+    this.rSlider = this.shadowRoot.getElementById('r-slider');
+    this.gSlider = this.shadowRoot.getElementById('g-slider');
+    this.bSlider = this.shadowRoot.getElementById('b-slider');
     
+    // HSL inputs and sliders
     this.hInput = this.shadowRoot.getElementById('h-input');
     this.sInput = this.shadowRoot.getElementById('s-input');
     this.lInput = this.shadowRoot.getElementById('l-input');
+    this.hSlider = this.shadowRoot.getElementById('h-slider');
+    this.sSlider = this.shadowRoot.getElementById('s-slider');
+    this.lSlider = this.shadowRoot.getElementById('l-slider');
     
-    // Set up event listeners
-    this.colorPickerInput.addEventListener('input', () => {
+    // Debounce function to prevent excessive updates
+    this.debounce = (func, delay) => {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    };
+    
+    // Set up event listeners with debouncing
+    this.colorPickerInput.addEventListener('input', this.debounce(() => {
       this.updateFromHex(this.colorPickerInput.value);
-    });
+    }, 50));
     
-    this.hexInput.addEventListener('input', () => {
+    this.hexInput.addEventListener('input', this.debounce(() => {
       const hex = this.hexInput.value;
       if (this.isValidHex(hex)) {
         this.updateFromHex(hex);
       }
-    });
+    }, 200));
     
     this.hexInput.addEventListener('blur', () => {
       const hex = this.hexInput.value;
@@ -165,27 +217,84 @@ class ToolColorPicker extends HTMLElement {
       }
     });
     
-    // RGB inputs
-    [this.rInput, this.gInput, this.bInput].forEach(input => {
+    // RGB inputs and sliders with debouncing
+    const updateFromRgbDebounced = this.debounce(() => {
+      this.updateFromRgb(
+        parseInt(this.rInput.value) || 0,
+        parseInt(this.gInput.value) || 0,
+        parseInt(this.bInput.value) || 0
+      );
+    }, 50);
+    
+    // Connect RGB number inputs to sliders
+    [this.rInput, this.gInput, this.bInput].forEach((input, index) => {
+      const slider = [this.rSlider, this.gSlider, this.bSlider][index];
+      
       input.addEventListener('input', () => {
-        this.updateFromRgb(
-          parseInt(this.rInput.value) || 0,
-          parseInt(this.gInput.value) || 0,
-          parseInt(this.bInput.value) || 0
-        );
+        slider.value = input.value;
+        updateFromRgbDebounced();
+      });
+      
+      slider.addEventListener('input', () => {
+        input.value = slider.value;
+        updateFromRgbDebounced();
       });
     });
     
-    // HSL inputs
-    [this.hInput, this.sInput, this.lInput].forEach(input => {
+    // HSL inputs and sliders with debouncing
+    const updateFromHslDebounced = this.debounce(() => {
+      this.updateFromHsl(
+        parseInt(this.hInput.value) || 0,
+        parseInt(this.sInput.value) || 0,
+        parseInt(this.lInput.value) || 0
+      );
+    }, 50);
+    
+    // Connect HSL number inputs to sliders
+    [this.hInput, this.sInput, this.lInput].forEach((input, index) => {
+      const slider = [this.hSlider, this.sSlider, this.lSlider][index];
+      
       input.addEventListener('input', () => {
-        this.updateFromHsl(
-          parseInt(this.hInput.value) || 0,
-          parseInt(this.sInput.value) || 0,
-          parseInt(this.lInput.value) || 0
-        );
+        slider.value = input.value;
+        updateFromHslDebounced();
+      });
+      
+      slider.addEventListener('input', () => {
+        input.value = slider.value;
+        updateFromHslDebounced();
       });
     });
+    
+    // Add click-to-copy functionality for color values
+    [this.colorHex, this.colorRgb, this.colorHsl].forEach(element => {
+      element.addEventListener('click', () => {
+        navigator.clipboard.writeText(element.textContent)
+          .then(() => {
+            this.showNotification(`Copied: ${element.textContent}`, 'success');
+          })
+          .catch(err => {
+            console.error('Could not copy text: ', err);
+          });
+      });
+    });
+    
+    // Eyedropper tool (if supported by browser)
+    if (this.eyedropperTool && window.EyeDropper) {
+      this.eyedropperTool.addEventListener('click', async () => {
+        try {
+          const eyeDropper = new EyeDropper();
+          const result = await eyeDropper.open();
+          this.updateFromHex(result.sRGBHex);
+          this.showNotification('Color picked from screen', 'success');
+        } catch (e) {
+          console.error('EyeDropper error:', e);
+          this.showNotification('Failed to pick color', 'error');
+        }
+      });
+    } else if (this.eyedropperTool) {
+      // Hide eyedropper if not supported
+      this.eyedropperTool.style.display = 'none';
+    }
   }
   
   initPaletteGenerator() {
@@ -197,20 +306,17 @@ class ToolColorPicker extends HTMLElement {
     this.savedPalettes = this.shadowRoot.getElementById('saved-palettes');
     this.temperatureSlider = this.shadowRoot.getElementById('temperature-slider');
     this.temperatureValue = this.shadowRoot.getElementById('temperature-value');
+    this.paletteTypeSelect = this.shadowRoot.getElementById('palette-type');
     
     // Set default temperature
     this.colorTemperature = 0; // Neutral by default
     
-    // Palette type selector
-    const paletteTypeButtons = this.shadowRoot.querySelectorAll('.palette-type-button');
+    // Palette type selector (dropdown)
     this.paletteType = 'monochromatic'; // Default
     
-    paletteTypeButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default button behavior
-        paletteTypeButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        this.paletteType = button.dataset.type;
+    if (this.paletteTypeSelect) {
+      this.paletteTypeSelect.addEventListener('change', () => {
+        this.paletteType = this.paletteTypeSelect.value;
         
         // Force regeneration of palette
         this.generatePalette();
@@ -218,10 +324,10 @@ class ToolColorPicker extends HTMLElement {
         // Log for debugging
         console.log(`Palette type changed to: ${this.paletteType}`);
       });
-    });
+    }
     
-    // Temperature slider
-    this.temperatureSlider.addEventListener('input', () => {
+    // Temperature slider with debouncing
+    const updateTemperatureDebounced = this.debounce(() => {
       this.colorTemperature = parseInt(this.temperatureSlider.value);
       this.updateTemperatureLabel();
       
@@ -230,7 +336,9 @@ class ToolColorPicker extends HTMLElement {
       
       // Log for debugging
       console.log(`Temperature changed to: ${this.colorTemperature}`);
-    });
+    }, 50);
+    
+    this.temperatureSlider.addEventListener('input', updateTemperatureDebounced);
     
     // Generate palette button
     this.generatePaletteBtn.addEventListener('click', (e) => {
@@ -409,10 +517,49 @@ class ToolColorPicker extends HTMLElement {
       case 'triadic':
         colors = this.generateTriadicPalette(adjustedHsl);
         break;
+      case 'tetradic':
+        colors = this.generateTetradicPalette(adjustedHsl);
+        break;
     }
     
     // Display palette
     this.displayPalette(colors);
+  }
+  
+  generateTetradicPalette(hsl) {
+    const colors = [];
+    const { h, s, l } = hsl;
+    
+    // Generate 5 colors using tetradic (rectangle) color scheme
+    // This creates colors at 0°, 90°, 180°, and 270° around the color wheel
+    const hueAngles = [0, 90, 180, 270];
+    
+    // First color is the original
+    colors.push(this.createColorObject(h, s, l));
+    
+    // Add the other tetradic colors
+    for (let i = 1; i < 4; i++) {
+      const newH = (h + hueAngles[i]) % 360;
+      // Slightly adjust lightness for variety
+      const newL = Math.max(30, Math.min(70, l + (i % 2 === 0 ? 5 : -5)));
+      colors.push(this.createColorObject(newH, s, newL));
+    }
+    
+    // Add a fifth color - a variation of the original with different lightness
+    const fifthL = Math.max(20, Math.min(80, l - 15));
+    colors.push(this.createColorObject(h, s, fifthL));
+    
+    return colors;
+  }
+  
+  createColorObject(h, s, l) {
+    const rgb = this.hslToRgb(h, s, l);
+    const hex = this.rgbToHex(rgb.r, rgb.g, rgb.b);
+    return {
+      hex,
+      rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+      hsl: `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`
+    };
   }
   
   applyTemperatureToColor(hsl) {
@@ -774,11 +921,10 @@ class ToolColorPicker extends HTMLElement {
   }
   
   loadPalette(palette) {
-    // Set palette type
-    const paletteTypeButtons = this.shadowRoot.querySelectorAll('.palette-type-button');
-    paletteTypeButtons.forEach(button => {
-      button.classList.toggle('active', button.dataset.type === palette.type);
-    });
+    // Set palette type in dropdown
+    if (this.paletteTypeSelect) {
+      this.paletteTypeSelect.value = palette.type;
+    }
     this.paletteType = palette.type;
     
     // Reset temperature to neutral

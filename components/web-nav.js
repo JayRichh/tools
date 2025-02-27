@@ -172,6 +172,8 @@ class WebNav extends HTMLElement {
               <a href="" class="nav-link tool-link" data-tool="markdown">Markdown Editor</a>
               <a href="" class="nav-link tool-link" data-tool="color-picker">Color Picker</a>
               <a href="" class="nav-link tool-link" data-tool="password">Password Generator</a>
+              <a href="" class="nav-link tool-link" data-tool="css-grid">CSS Grid Builder</a>
+              <a href="" class="nav-link tool-link" data-tool="flexbox">Flexbox Builder</a>
             </div>
 
             <div class="nav-section">
