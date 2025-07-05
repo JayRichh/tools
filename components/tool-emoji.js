@@ -742,7 +742,7 @@ class ToolEmoji extends HTMLElement {
   async loadEmojiData() {
     this.spinner.classList.add('visible')
     try {
-      const response = await fetch('/tools/emoji/emoji-test.txt')
+      const response = await fetch('../../emoji-test.txt')
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
       const content = await response.text()
       this.emojiData = this.parseEmojiData(content)
