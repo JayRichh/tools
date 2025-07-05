@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Web Tools - Developer Utilities</image:title>
+      <image:caption>Free online developer tools and utilities</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- TOTP Generator -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/totp/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>TOTP Generator - Two-Factor Authentication</image:title>
+      <image:caption>Generate time-based one-time passwords for 2FA</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Clipboard Tool -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/clipboard/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Clipboard Image Tool</image:title>
+      <image:caption>Paste, view and download images from clipboard</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Emoji Picker -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/emoji/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Emoji Picker Tool</image:title>
+      <image:caption>Search and select Unicode emoji with categories</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- TimeSync Tool -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/timezone/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>TimeSync - Timezone Converter</image:title>
+      <image:caption>Convert times across timezones and track events</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Text Transform -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/text-transform/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Text Transform Tool</image:title>
+      <image:caption>Encode, decode, and transform text with various operations</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Code Tools -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/code-tools/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Code Tools - Format and Validate</image:title>
+      <image:caption>Format, validate, and beautify code in various languages</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Markdown Editor -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/markdown/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Markdown Editor and Previewer</image:title>
+      <image:caption>Edit and preview Markdown documents with live rendering</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Color Picker -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/color-picker/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Color Picker Tool</image:title>
+      <image:caption>Select colors and convert between formats</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Password Generator -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/password/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Password Generator and Strength Checker</image:title>
+      <image:caption>Create strong, secure passwords with customizable options</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- CSS Grid Builder -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/css-grid/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>CSS Grid Builder</image:title>
+      <image:caption>Create, visualize, and generate CSS Grid layouts</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Flexbox Builder -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/flexbox/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Flexbox Builder</image:title>
+      <image:caption>Create, visualize, and generate CSS Flexbox layouts</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Breakpoint Tester -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/breakpoint-tester/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Responsive Breakpoint Tester</image:title>
+      <image:caption>Simulate how your layout adapts across devices</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Contrast Checker -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/contrast-checker/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>Color Contrast Checker</image:title>
+      <image:caption>Verify color choices meet accessibility standards</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Shader Playground -->
+  <url>
+    <loc>https://jayrichh.github.io/tools/tools/shader-playground/</loc>
+    <lastmod>2025-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://jayrichh.github.io/tools/logo-bg-128.png</image:loc>
+      <image:title>WebGL Shader Playground</image:title>
+      <image:caption>Create and experiment with WebGL shaders in real-time</image:caption>
+    </image:image>
+  </url>
+  
+</urlset>

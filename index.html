@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="style.css">
     
-    <web-seo 
+    <web-seo
         page-title="Online Developer Utilities"
-        description="Free online developer tools including clipboard image handler and emoji picker. Simple, fast, and easy to use web utilities."
-        keywords="web tools, developer tools, clipboard, emoji picker, timezone converter, text transform, code tools, markdown editor, color picker, password generator"
+        description="Free online developer tools for web developers and designers. Including TOTP generator, clipboard tools, emoji picker, timezone converter, and more. Simple, fast, and easy to use web utilities."
+        keywords="web tools, developer tools, TOTP generator, 2FA, two-factor authentication, clipboard, emoji picker, timezone converter, text transform, code tools, markdown editor, color picker, password generator, CSS grid, flexbox, breakpoint tester, contrast checker, shader playground"
         type="website"
         path=""
-        image="logo-bg-128.png">
+        image="logo-bg-128.png"
+        category="SoftwareApplication"
+        author="Jay Rich">
     </web-seo>
 </head>
 <body>
@@ -22,6 +24,9 @@
 
     <main>
         <div class="tools-grid">
+            <tool-card data-title="TOTP Generator" data-route="tools/totp" data-icon="🔐">
+                <p>Generate time-based one-time passwords</p>
+            </tool-card>
             <tool-card data-title="Clipboard" data-route="tools/clipboard" data-icon="📋">
                 <p>Paste, drag & drop, or select images</p>
             </tool-card>
