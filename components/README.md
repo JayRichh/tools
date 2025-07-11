@@ -57,7 +57,7 @@ Usage:
     description="Tool description for SEO"
     keywords="comma, separated, keywords"
     type="WebApplication"
-    path="tools/tool-path"
+    path="tool-path"
     image="path/to/image.png">
 </web-seo>
 ```
@@ -86,4 +86,4 @@ Each tool has its own web component that encapsulates its functionality:
 
 ## Template
 
-A template HTML file is available at `tools/template.html` that can be used as a starting point for new tool pages.
+A template HTML file is available at `template.html` that can be used as a starting point for new tool pages.

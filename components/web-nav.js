@@ -216,7 +216,7 @@ class WebNav extends HTMLElement {
     // Set tool links
     this.toolLinks.forEach(link => {
       const tool = link.dataset.tool
-      link.href = `${basePath}tools/${tool}/index.html`
+      link.href = `${basePath}${tool}/index.html`
     })
   }
   
@@ -226,15 +226,15 @@ class WebNav extends HTMLElement {
     // If we're at the root or index.html
     if (currentPath === '/' || 
         currentPath.endsWith('/index.html') || 
-        currentPath === '/tools/' || 
-        currentPath === '/tools/index.html') {
+        currentPath === '/' || 
+        currentPath === '/index.html') {
       return ''
     }
     
-    // If we're in a tool directory
-    if (currentPath.includes('/tools/')) {
-      return '../../'
-    }
+    // // If we're in a tool directory
+    // if (currentPath.includes('/')) {
+    //   return '../../'
+    // }
     
     return ''
   }

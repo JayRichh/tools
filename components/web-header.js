@@ -233,13 +233,13 @@ class WebHeader extends HTMLElement {
     // If we're at the root or index.html
     if (currentPath === '/' || 
         currentPath.endsWith('/index.html') || 
-        currentPath === '/tools/' || 
-        currentPath === '/tools/index.html') {
+        currentPath === '/' || 
+        currentPath === '/index.html') {
       return ''
     }
     
     // If we're in a tool directory
-    if (currentPath.includes('/tools/')) {
+    if (currentPath.includes('/')) {
       return '../../'
     }
     
@@ -250,7 +250,7 @@ class WebHeader extends HTMLElement {
     const currentPath = window.location.pathname
     const isRootPage = currentPath === '/' || 
                       currentPath.endsWith('index.html') ||
-                      currentPath === '/tools/'
+                      currentPath === '/'
     
     if (!isRootPage) {
       this.backButton.classList.add('visible')

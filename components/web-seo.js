@@ -5,8 +5,8 @@ class WebSeo extends HTMLElement {
     // This component doesn't use shadow DOM since it needs to modify the document head
     this.baseTitle = 'Web Tools'
     this.baseDescription = 'Free online developer tools for web developers and designers. Simple, fast, and easy to use web utilities.'
-    this.baseUrl = 'https://jayrichh.github.io/tools/'
-    this.baseImageUrl = 'https://jayrichh.github.io/tools/logo-bg-128.png'
+    this.baseUrl = 'https://jayrichh.github.io/'
+    this.baseImageUrl = 'https://jayrichh.github.io/logo-bg-128.png'
     this.siteName = 'Web Tools - Developer Utilities'
     this.authorName = 'Jay Rich'
     this.organizationName = 'Web Tools'
@@ -80,7 +80,7 @@ class WebSeo extends HTMLElement {
     this.addSchemaOrgData(pageType, fullTitle, pageDescription, fullUrl, fullImageUrl, category, author)
     
     // Add breadcrumb schema if it's a tool page
-    if (pagePath && pagePath.includes('tools/')) {
+    if (pagePath && pagePath.includes('')) {
       this.addBreadcrumbSchema(fullTitle, fullUrl, pagePath)
     }
   }

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://jayrichh.github.io/tools/sitemap.xml
+Sitemap: https://jayrichh.github.io/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1

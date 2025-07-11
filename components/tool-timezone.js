@@ -268,7 +268,7 @@ class ToolTimezone extends HTMLElement {
   initializeTimezoneData() {
     this.timezoneNameEl.textContent = this.userTimezone.replace(/_/g, ' ');
     this.timezoneOffsetEl.textContent = this.userOffset;
-    fetch('/tools/timezone/countries.json')
+    fetch('/timezone/countries.json')
       .then(response => response.json())
       .then(data => {
         this.countries = data;
