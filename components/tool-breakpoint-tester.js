@@ -804,6 +804,12 @@ class ToolBreakpointTester extends HTMLElement {
     notification.className = `notification ${type}`;
     notification.textContent = message;
     
+    notification.style.position = 'fixed';
+    notification.style.top = '2rem';
+    notification.style.right = '2rem';
+    notification.style.zIndex = '9999';
+    notification.style.pointerEvents = 'none';
+    
     this.shadowRoot.appendChild(notification);
     
     setTimeout(() => {

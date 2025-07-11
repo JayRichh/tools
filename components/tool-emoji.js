@@ -347,7 +347,7 @@ class ToolEmoji extends HTMLElement {
 
       .copied {
         position: fixed;
-        top: 4rem;
+        top: 2rem;
         right: 2rem;
         background: var(--dark-sage);
         color: white;
@@ -357,12 +357,29 @@ class ToolEmoji extends HTMLElement {
         transform: translateY(-10px);
         transition: opacity 0.3s, transform 0.3s;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 3;
+        z-index: 9999;
+        pointer-events: none;
       }
 
       .copied.show {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
         opacity: 1;
         transform: translateY(0);
+        transition: opacity 0.3s, transform 0.3s;
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px) scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       .loading-spinner {
@@ -447,9 +464,9 @@ class ToolEmoji extends HTMLElement {
             </div>
           </div>
           <div class="emoji-content"></div>
-          <div class="copied">Copied!</div>
         </div>
       </div>
+      <div class="copied">Copied!</div>
       <div class="tooltip-container">
         <div class="tooltip"></div>
       </div>

@@ -837,6 +837,12 @@ class ToolContrastChecker extends HTMLElement {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
+    notification.style.position = 'fixed';
+    notification.style.top = '2rem';
+    notification.style.right = '2rem';
+    notification.style.zIndex = '9999';
+    notification.style.pointerEvents = 'none';
+    
     notification.textContent = message;
     
     // Add to shadow DOM
