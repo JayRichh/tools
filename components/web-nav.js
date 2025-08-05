@@ -164,6 +164,7 @@ class WebNav extends HTMLElement {
             
             <div class="nav-section">
               <div class="nav-section-title">Tools</div>
+              <a href="" class="nav-link tool-link" data-tool="seo-checker">SEO Checker</a>
               <a href="" class="nav-link tool-link" data-tool="clipboard">Clipboard</a>
               <a href="" class="nav-link tool-link" data-tool="emoji">Emoji Picker</a>
               <a href="" class="nav-link tool-link" data-tool="timezone">TimeSync</a>
