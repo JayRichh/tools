@@ -190,16 +190,6 @@
   font-size: 0.9rem;
 }
 
-.help-text {
-  background: rgba(214, 206, 147, 0.1);
-  border: 1px solid var(--vanilla, #d6ce93);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: var(--dark-text, #2c2c2c);
-  line-height: 1.4;
-}
 
 /* Analysis Settings */
 .analysis-settings {

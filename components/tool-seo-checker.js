@@ -27,25 +27,21 @@ class ToolSeoChecker extends HTMLElement {
               <div class="input-section">
                 <h3>XML Sitemap Analysis</h3>
                 <div class="input-group">
-                  <label for="sitemap-input">Paste sitemap.xml content:</label>
-                  <textarea id="sitemap-input" placeholder="Paste your sitemap.xml content here (not URL - copy the XML content directly)..."></textarea>
+                  <label for="sitemap-input">Sitemap URL or XML content:</label>
+                  <textarea id="sitemap-input" placeholder="Enter sitemap URL (https://example.com/sitemap.xml) or paste XML content..."></textarea>
                 </div>
                 <div class="file-upload-area" id="sitemap-upload">
                   <span>Or drag & drop sitemap.xml file</span>
                   <input type="file" id="sitemap-file" accept=".xml,.txt" hidden>
-                </div>
-                <div class="help-text">
-                  <strong>Note:</strong> Due to CORS restrictions, enter XML content directly instead of URLs. 
-                  Visit the sitemap URL in your browser, copy the XML, and paste it here.
                 </div>
               </div>
             </div>
             
             <div class="tab-content" data-tab="urls">
               <div class="input-section">
-                <h3>URL List Analysis</h3>
+                <h3>Bulk URL Analysis</h3>
                 <div class="input-group">
-                  <label for="url-input">Enter URLs (one per line):</label>
+                  <label for="url-input">Enter URLs to analyze (one per line):</label>
                   <textarea id="url-input" placeholder="https://example.com/page1
 https://example.com/page2
 https://example.com/page3"></textarea>
@@ -59,9 +55,9 @@ https://example.com/page3"></textarea>
             
             <div class="tab-content" data-tab="files">
               <div class="input-section">
-                <h3>HTML File Analysis</h3>
+                <h3>Offline HTML Analysis</h3>
                 <div class="file-upload-area" id="html-upload">
-                  <span>Drag & drop HTML files for offline analysis</span>
+                  <span>Upload HTML files for SEO analysis</span>
                   <input type="file" id="html-files" accept=".html,.htm" multiple hidden>
                 </div>
                 <div class="file-list" id="html-file-list"></div>
@@ -70,7 +66,7 @@ https://example.com/page3"></textarea>
             
             <div class="tab-content" data-tab="import">
               <div class="input-section">
-                <h3>Import Configuration</h3>
+                <h3>Batch Configuration</h3>
                 <div class="file-upload-area" id="json-upload">
                   <span>Upload JSON configuration file</span>
                   <input type="file" id="json-file" accept=".json" hidden>
@@ -493,11 +489,66 @@ https://example.com/page3"></textarea>
   async processSitemap() {
     const content = this.sitemapInput.value.trim();
     if (!content) {
-      throw new Error('Please provide sitemap XML content');
+      throw new Error('Please provide sitemap URL or XML content');
     }
     
-    // Always treat input as XML content - no URL fetching
-    return this.extractUrlsFromSitemap(content);
+    // Check if it's a URL
+    if (content.startsWith('http://') || content.startsWith('https://')) {
+      try {
+        const sitemapData = await this.fetchSitemapWithIframe(content);
+        return this.extractUrlsFromSitemap(sitemapData);
+      } catch (error) {
+        throw new Error(`Failed to fetch sitemap from URL: ${error.message}`);
+      }
+    } else {
+      // Assume it's XML content
+      return this.extractUrlsFromSitemap(content);
+    }
+  }
+  
+  async fetchSitemapWithIframe(url) {
+    return new Promise((resolve, reject) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      
+      const timeoutId = setTimeout(() => {
+        document.body.removeChild(iframe);
+        reject(new Error('Timeout fetching sitemap'));
+      }, 10000);
+      
+      const onLoad = () => {
+        clearTimeout(timeoutId);
+        iframe.removeEventListener('load', onLoad);
+        iframe.removeEventListener('error', onError);
+        
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!iframeDoc) {
+            throw new Error('Cannot access sitemap content');
+          }
+          
+          const xmlContent = iframeDoc.documentElement.outerHTML;
+          document.body.removeChild(iframe);
+          resolve(xmlContent);
+        } catch (error) {
+          document.body.removeChild(iframe);
+          reject(error);
+        }
+      };
+      
+      const onError = () => {
+        clearTimeout(timeoutId);
+        iframe.removeEventListener('load', onLoad);
+        iframe.removeEventListener('error', onError);
+        document.body.removeChild(iframe);
+        reject(new Error('Failed to load sitemap URL'));
+      };
+      
+      iframe.addEventListener('load', onLoad);
+      iframe.addEventListener('error', onError);
+      iframe.src = url;
+    });
   }
   
   extractUrlsFromSitemap(xmlContent) {
@@ -599,42 +650,104 @@ https://example.com/page3"></textarea>
     this.showProgressSection();
     this.updateProgress();
     
-    // Process URLs one by one to avoid CORS issues
+    // Create hidden iframe for loading URLs
+    this.createAnalysisIframe();
+    
+    // Process URLs one by one using iframe (like breakpoint tester)
     for (let i = 0; i < urls.length && this.isAnalyzing; i++) {
       const url = urls[i];
-      this.updateCurrentStatus(`Analyzing: ${url}`);
+      this.updateCurrentStatus(`Loading: ${url}`);
       
       try {
-        // Try direct fetch first
-        const response = await fetch(url, { mode: 'no-cors' });
-        this.analysisResults.push({
-          url,
-          status: 'no-cors',
-          title: 'Unable to analyze (CORS blocked)',
-          score: 0,
-          issues: ['CORS blocked - cannot analyze content'],
-          suggestions: ['Use HTML file upload feature', 'Copy page HTML and paste manually']
-        });
+        const result = await this.analyzeUrlWithIframe(url);
+        this.analysisResults.push(result);
       } catch (error) {
         this.analysisResults.push({
           url,
           status: 'error',
-          error: 'Cannot access URL',
+          error: error.message,
           score: 0,
-          issues: ['URL not accessible'],
-          suggestions: ['Check URL is correct', 'Use HTML file upload feature']
+          issues: [`Failed to load: ${error.message}`],
+          suggestions: ['Check URL is accessible', 'Try HTML file upload instead']
         });
       }
       
       this.updateProgress();
       
-      // Small delay between requests
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Small delay between URLs
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
+    
+    // Clean up iframe
+    this.removeAnalysisIframe();
     
     if (this.isAnalyzing) {
       this.completeAnalysis();
     }
+  }
+  
+  createAnalysisIframe() {
+    this.analysisIframe = document.createElement('iframe');
+    this.analysisIframe.style.display = 'none';
+    this.analysisIframe.style.width = '1280px';
+    this.analysisIframe.style.height = '720px';
+    document.body.appendChild(this.analysisIframe);
+  }
+  
+  removeAnalysisIframe() {
+    if (this.analysisIframe) {
+      document.body.removeChild(this.analysisIframe);
+      this.analysisIframe = null;
+    }
+  }
+  
+  async analyzeUrlWithIframe(url) {
+    return new Promise((resolve, reject) => {
+      // Set up timeout
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Timeout loading page'));
+      }, 15000);
+      
+      // Set up load handler
+      const onLoad = () => {
+        clearTimeout(timeoutId);
+        this.analysisIframe.removeEventListener('load', onLoad);
+        this.analysisIframe.removeEventListener('error', onError);
+        
+        try {
+          this.updateCurrentStatus(`Analyzing: ${url}`);
+          
+          // Get iframe document
+          const iframeDoc = this.analysisIframe.contentDocument || this.analysisIframe.contentWindow.document;
+          
+          if (!iframeDoc) {
+            reject(new Error('Cannot access iframe content'));
+            return;
+          }
+          
+          // Analyze the loaded page
+          const result = this.analyzePage(url, iframeDoc.documentElement.outerHTML, 'url');
+          resolve(result);
+          
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      const onError = () => {
+        clearTimeout(timeoutId);
+        this.analysisIframe.removeEventListener('load', onLoad);
+        this.analysisIframe.removeEventListener('error', onError);
+        reject(new Error('Failed to load page'));
+      };
+      
+      // Set up event listeners
+      this.analysisIframe.addEventListener('load', onLoad);
+      this.analysisIframe.addEventListener('error', onError);
+      
+      // Load the URL (same as breakpoint tester)
+      this.analysisIframe.src = url;
+    });
   }
   
   // Remove broken worker method
