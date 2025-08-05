@@ -27,12 +27,16 @@ class ToolSeoChecker extends HTMLElement {
               <div class="input-section">
                 <h3>XML Sitemap Analysis</h3>
                 <div class="input-group">
-                  <label for="sitemap-input">Paste sitemap.xml content or URL:</label>
-                  <textarea id="sitemap-input" placeholder="Paste your sitemap.xml content here or enter sitemap URL..."></textarea>
+                  <label for="sitemap-input">Paste sitemap.xml content:</label>
+                  <textarea id="sitemap-input" placeholder="Paste your sitemap.xml content here (not URL - copy the XML content directly)..."></textarea>
                 </div>
                 <div class="file-upload-area" id="sitemap-upload">
                   <span>Or drag & drop sitemap.xml file</span>
                   <input type="file" id="sitemap-file" accept=".xml,.txt" hidden>
+                </div>
+                <div class="help-text">
+                  <strong>Note:</strong> Due to CORS restrictions, enter XML content directly instead of URLs. 
+                  Visit the sitemap URL in your browser, copy the XML, and paste it here.
                 </div>
               </div>
             </div>
@@ -226,24 +230,7 @@ https://example.com/page3"></textarea>
     this.currentIndex = 0;
     this.startTime = null;
     
-    // Working CORS proxies for GitHub Pages
-    this.corsProxies = [
-      {
-        url: 'https://api.codetabs.com/v1/proxy?quest=',
-        name: 'CodeTabs',
-        parseResponse: (data) => data
-      },
-      {
-        url: 'https://api.allorigins.win/raw?url=',
-        name: 'AllOrigins-Raw',
-        parseResponse: (data) => data
-      },
-      {
-        url: 'https://corsproxy.io/?',
-        name: 'CorsProxy',
-        parseResponse: (data) => data
-      }
-    ];
+    // No CORS proxies - they don't work reliably
     
     // Detect environment and set appropriate settings
     this.isLocalDev = window.location.hostname === '127.0.0.1' || 
@@ -506,45 +493,11 @@ https://example.com/page3"></textarea>
   async processSitemap() {
     const content = this.sitemapInput.value.trim();
     if (!content) {
-      throw new Error('Please provide sitemap content or URL');
+      throw new Error('Please provide sitemap XML content');
     }
     
-    // Check if it's a URL
-    if (content.startsWith('http://') || content.startsWith('https://')) {
-      // Try direct sitemap fetch with specific handling
-      try {
-        const sitemapData = await this.fetchSitemap(content);
-        return this.extractUrlsFromSitemap(sitemapData);
-      } catch (error) {
-        // If sitemap fetch fails, prompt user to paste content instead
-        this.showNotification('Cannot fetch sitemap URL due to CORS. Please paste the sitemap XML content directly.', 'warning');
-        throw new Error('Sitemap URL blocked by CORS. Please copy the sitemap XML content and paste it instead of the URL.');
-      }
-    } else {
-      // Assume it's XML content
-      return this.extractUrlsFromSitemap(content);
-    }
-  }
-  
-  async fetchSitemap(url) {
-    // Try working CORS proxies for sitemaps
-    const sitemapProxies = [
-      'https://api.codetabs.com/v1/proxy?quest=',
-      'https://api.allorigins.win/raw?url=',
-      'https://corsproxy.io/?'
-    ];
-    
-    for (const proxy of sitemapProxies) {
-      try {
-        const response = await fetch(proxy + encodeURIComponent(url));
-        if (!response.ok) continue;
-        return await response.text();
-      } catch (error) {
-        continue;
-      }
-    }
-    
-    throw new Error('Failed to fetch');
+    // Always treat input as XML content - no URL fetching
+    return this.extractUrlsFromSitemap(content);
   }
   
   extractUrlsFromSitemap(xmlContent) {
@@ -646,332 +599,47 @@ https://example.com/page3"></textarea>
     this.showProgressSection();
     this.updateProgress();
     
-    const concurrentLimit = parseInt(this.concurrentLimit.value);
-    const retryAttempts = parseInt(this.retryAttempts.value);
-    
-    const workers = [];
-    for (let i = 0; i < concurrentLimit; i++) {
-      workers.push(this.analyzeWorker(retryAttempts));
+    // Process URLs one by one to avoid CORS issues
+    for (let i = 0; i < urls.length && this.isAnalyzing; i++) {
+      const url = urls[i];
+      this.updateCurrentStatus(`Analyzing: ${url}`);
+      
+      try {
+        // Try direct fetch first
+        const response = await fetch(url, { mode: 'no-cors' });
+        this.analysisResults.push({
+          url,
+          status: 'no-cors',
+          title: 'Unable to analyze (CORS blocked)',
+          score: 0,
+          issues: ['CORS blocked - cannot analyze content'],
+          suggestions: ['Use HTML file upload feature', 'Copy page HTML and paste manually']
+        });
+      } catch (error) {
+        this.analysisResults.push({
+          url,
+          status: 'error',
+          error: 'Cannot access URL',
+          score: 0,
+          issues: ['URL not accessible'],
+          suggestions: ['Check URL is correct', 'Use HTML file upload feature']
+        });
+      }
+      
+      this.updateProgress();
+      
+      // Small delay between requests
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
-    
-    await Promise.all(workers);
     
     if (this.isAnalyzing) {
       this.completeAnalysis();
     }
   }
   
-  async analyzeWorker(retryAttempts) {
-    while (this.isAnalyzing && this.currentIndex < this.analysisQueue.length) {
-      if (this.isPaused) {
-        await new Promise(resolve => {
-          const checkResume = () => {
-            if (!this.isPaused || !this.isAnalyzing) {
-              resolve();
-            } else {
-              setTimeout(checkResume, 100);
-            }
-          };
-          checkResume();
-        });
-      }
-      
-      if (!this.isAnalyzing) break;
-      
-      const urlIndex = this.currentIndex++;
-      if (urlIndex >= this.analysisQueue.length) break;
-      
-      const url = this.analysisQueue[urlIndex];
-      this.updateCurrentStatus(`Fetching: ${url}`);
-      
-      let result = null;
-      let attempts = 0;
-      
-      while (attempts < retryAttempts && !result && this.isAnalyzing) {
-        attempts++;
-        try {
-          this.updateCurrentStatus(`Analyzing: ${url} (attempt ${attempts}/${retryAttempts})`);
-          const html = await this.fetchUrl(url);
-          this.updateCurrentStatus(`Processing: ${url}`);
-          result = this.analyzePage(url, html, 'url');
-          break;
-        } catch (error) {
-          if (attempts === retryAttempts) {
-            // Provide helpful error messages based on the type of failure
-            let userFriendlyError = error.message;
-            let suggestions = [];
-            
-            if (error.message.includes('CORS') || error.message.includes('All methods failed')) {
-              userFriendlyError = 'CORS blocked - unable to access this website';
-              suggestions.push('Try using the HTML file upload feature instead');
-              suggestions.push('Check if the website blocks automated requests');
-            } else if (error.message.includes('timeout') || error.message.includes('aborted')) {
-              userFriendlyError = 'Request timeout - website took too long to respond';
-              suggestions.push('The website may be slow or experiencing issues');
-            } else if (error.message.includes('HTTP 403') || error.message.includes('HTTP 429')) {
-              userFriendlyError = 'Access denied - website blocks automated requests';
-              suggestions.push('Try again later or use HTML file upload');
-            } else if (error.message.includes('HTTP 404')) {
-              userFriendlyError = 'Page not found - URL may be incorrect';
-            } else if (error.message.includes('HTTP 5')) {
-              userFriendlyError = 'Server error - website is experiencing issues';
-            }
-            
-            result = {
-              url,
-              status: 'error',
-              error: userFriendlyError,
-              suggestions,
-              score: 0,
-              issues: [`Failed to fetch: ${userFriendlyError}`]
-            };
-          } else {
-            this.updateCurrentStatus(`Retrying: ${url} (${this.getShortError(error.message)})`);
-            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
-          }
-        }
-      }
-      
-      if (result) {
-        this.analysisResults.push(result);
-        this.updateProgress();
-      }
-    }
-  }
+  // Remove broken worker method
   
-  async fetchUrl(url) {
-    // Normalize URL and handle redirects
-    const normalizedUrl = this.normalizeUrl(url);
-    this.updateCurrentStatus(`Fetching: ${normalizedUrl}`);
-    
-    let lastError = null;
-    
-    // Try CORS proxies in order
-    for (let i = 0; i < this.corsProxies.length; i++) {
-      const proxy = this.corsProxies[i];
-      try {
-        this.updateCurrentStatus(`Trying ${proxy.name}: ${normalizedUrl}`);
-        
-        const requestUrl = proxy.url + encodeURIComponent(normalizedUrl);
-        const requestHeaders = {
-          'Accept': 'application/json, text/html, */*',
-          'Accept-Language': 'en-US,en;q=0.9',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          ...(proxy.headers || {})
-        };
-        
-        // Environment-specific timeout settings
-        const timeout = this.isLocalDev ? 10000 : // Local dev: faster
-                       this.isGitHubPages ? 20000 : // GitHub Pages: longer for static hosting
-                       15000; // Default: balanced
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
-        
-        const response = await fetch(requestUrl, {
-          signal: controller.signal,
-          headers: requestHeaders,
-          mode: 'cors',
-          credentials: 'omit'
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          throw new Error(`${proxy.name} returned HTTP ${response.status}`);
-        }
-        
-        const htmlContent = await response.text();
-        
-        if (!htmlContent || typeof htmlContent !== 'string') {
-          throw new Error(`${proxy.name} returned invalid content`);
-        }
-        
-        // Check if we got server-side rendered content
-        return await this.ensureServerSideContent(htmlContent, normalizedUrl);
-        
-      } catch (error) {
-        lastError = error;
-        console.warn(`${proxy.name} failed for ${normalizedUrl}:`, error.message);
-        
-        // Add small delay before trying next proxy
-        if (i < this.corsProxies.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        continue;
-      }
-    }
-    
-    // Final fallback - try direct request (usually fails due to CORS)
-    try {
-      this.updateCurrentStatus(`Direct request: ${normalizedUrl}`);
-      const response = await fetch(normalizedUrl, {
-        headers: {
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.9',
-          'Cache-Control': 'no-cache'
-        },
-        mode: 'cors',
-        credentials: 'omit'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      
-      const htmlContent = await response.text();
-      return await this.ensureServerSideContent(htmlContent, normalizedUrl);
-    } catch (error) {
-      throw new Error(`All methods failed. Last error: ${lastError?.message || error.message}`);
-    }
-  }
-  
-  normalizeUrl(url) {
-    // Handle common redirect patterns
-    if (url.startsWith('http://')) {
-      // Try HTTPS first
-      url = url.replace('http://', 'https://');
-    }
-    
-    // Handle www redirects by trying both variations
-    if (!url.includes('www.') && !url.includes('localhost') && !url.includes('127.0.0.1')) {
-      const domain = new URL(url);
-      return `https://www.${domain.hostname}${domain.pathname}${domain.search}${domain.hash}`;
-    }
-    
-    return url;
-  }
-  
-  getShortError(errorMessage) {
-    // Return shortened error messages for status display
-    if (errorMessage.includes('CORS') || errorMessage.includes('All methods failed')) {
-      return 'CORS blocked';
-    } else if (errorMessage.includes('timeout') || errorMessage.includes('aborted')) {
-      return 'timeout';
-    } else if (errorMessage.includes('HTTP 403')) {
-      return '403 forbidden';
-    } else if (errorMessage.includes('HTTP 404')) {
-      return '404 not found';
-    } else if (errorMessage.includes('HTTP 429')) {
-      return '429 rate limited';
-    } else if (errorMessage.includes('HTTP 5')) {
-      return 'server error';
-    }
-    return errorMessage.substring(0, 30) + '...';
-  }
-  
-  async ensureServerSideContent(htmlContent, url) {
-    // Parse the initial HTML to check for signs of SSR vs CSR
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, 'text/html');
-    
-    // Check if content appears to be server-side rendered
-    const hasTitle = doc.title && doc.title.trim() && !doc.title.includes('{{') && doc.title !== 'Loading...';
-    const hasMetaDescription = doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim();
-    const hasContentIndicators = doc.body && doc.body.textContent.trim().length > 100;
-    const hasStructuredData = doc.querySelectorAll('script[type="application/ld+json"]').length > 0;
-    
-    // Signs this might be a SPA/CSR that needs time to load
-    const hasSpaIndicators = htmlContent.includes('ng-app') || 
-                            htmlContent.includes('data-reactroot') || 
-                            htmlContent.includes('__NEXT_DATA__') ||
-                            htmlContent.includes('nuxt') ||
-                            htmlContent.includes('gatsby') ||
-                            doc.getElementById('root') ||
-                            doc.getElementById('app') ||
-                            doc.querySelector('[data-vue-ssr-id]');
-    
-    // If we have good SSR content, return it
-    if (hasTitle && hasMetaDescription && hasContentIndicators && !hasSpaIndicators) {
-      return htmlContent;
-    }
-    
-    // If it looks like a SPA or has minimal content, try to get better content
-    if (hasSpaIndicators || (!hasTitle || !hasMetaDescription)) {
-      this.updateCurrentStatus(`Waiting for SSR content: ${url}`);
-      return await this.fetchWithRetryForSSR(url, htmlContent);
-    }
-    
-    return htmlContent;
-  }
-  
-  async fetchWithRetryForSSR(url, fallbackContent) {
-    // Strategy: Try different proxies with delays to allow SSR to complete
-    const delays = [2000, 4000]; // Wait 2s, 4s for server-side rendering (reduced for better UX)
-    
-    for (let i = 0; i < delays.length && this.isAnalyzing; i++) {
-      try {
-        this.updateCurrentStatus(`Waiting for SSR (${delays[i]/1000}s): ${url}`);
-        
-        // Wait before retry to allow SSR to complete
-        await new Promise(resolve => setTimeout(resolve, delays[i]));
-        
-        if (!this.isAnalyzing) break; // Check if analysis was stopped
-        
-        // Try a different proxy
-        const proxyIndex = i % this.corsProxies.length;
-        const proxy = this.corsProxies[proxyIndex];
-        
-        this.updateCurrentStatus(`Retry ${proxy.name}: ${url}`);
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
-        
-        const response = await fetch(proxy.url + encodeURIComponent(url), {
-          signal: controller.signal,
-          headers: {
-            'Accept': 'application/json, text/html, */*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            ...(proxy.headers || {})
-          },
-          mode: 'cors',
-          credentials: 'omit'
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) continue;
-        
-        const newContent = await response.text();
-        
-        if (!newContent || typeof newContent !== 'string') continue;
-        
-        // Check if this version has better content
-        const newDoc = new DOMParser().parseFromString(newContent, 'text/html');
-        const newTitle = newDoc.title?.trim();
-        const newMeta = newDoc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim();
-        const newBodyLength = newDoc.body?.textContent?.trim().length || 0;
-        const newStructuredData = newDoc.querySelectorAll('script[type="application/ld+json"]').length;
-        
-        const originalDoc = new DOMParser().parseFromString(fallbackContent, 'text/html');
-        const originalTitle = originalDoc.title?.trim();
-        const originalMeta = originalDoc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim();
-        const originalBodyLength = originalDoc.body?.textContent?.trim().length || 0;
-        const originalStructuredData = originalDoc.querySelectorAll('script[type="application/ld+json"]').length;
-        
-        // If new content is significantly better, use it
-        const titleImproved = newTitle && newTitle !== originalTitle && newTitle.length > 10;
-        const metaImproved = newMeta && (!originalMeta || newMeta.length > originalMeta.length + 20);
-        const contentImproved = newBodyLength > originalBodyLength * 1.3;
-        const structuredDataImproved = newStructuredData > originalStructuredData;
-        
-        if (titleImproved || metaImproved || contentImproved || structuredDataImproved) {
-          this.updateCurrentStatus(`Better content found: ${url}`);
-          return newContent;
-        }
-        
-      } catch (error) {
-        console.warn(`SSR retry ${i+1} failed for ${url}:`, error.message);
-        continue;
-      }
-    }
-    
-    // If all retries failed, return the original content
-    return fallbackContent;
-  }
+  // All CORS fetching removed - doesn't work reliably
   
   analyzePage(url, html, source = 'url') {
     try {
