@@ -226,32 +226,40 @@ https://example.com/page3"></textarea>
     this.currentIndex = 0;
     this.startTime = null;
     
-    // GitHub Pages compatible CORS proxies
+    // Working CORS proxies for GitHub Pages
     this.corsProxies = [
       {
-        url: 'https://api.allorigins.win/get?url=',
-        name: 'AllOrigins',
-        parseResponse: (data) => data.contents,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
+        url: 'https://api.codetabs.com/v1/proxy?quest=',
+        name: 'CodeTabs',
+        parseResponse: (data) => data
       },
       {
-        url: 'https://cors-proxy.htmldriven.com/?url=',
-        name: 'HTMLDriven',
-        parseResponse: (data) => typeof data === 'string' ? data : data.body || data.contents || data
+        url: 'https://api.allorigins.win/raw?url=',
+        name: 'AllOrigins-Raw',
+        parseResponse: (data) => data
       },
       {
-        url: 'https://proxy.cors.sh/',
-        name: 'CORS.sh',
+        url: 'https://corsproxy.io/?',
+        name: 'CorsProxy',
         parseResponse: (data) => data
       }
     ];
     
-    // Detect GitHub Pages environment
+    // Detect environment and set appropriate settings
+    this.isLocalDev = window.location.hostname === '127.0.0.1' || 
+                      window.location.hostname === 'localhost' ||
+                      window.location.port === '5500';
     this.isGitHubPages = window.location.hostname.includes('github.io');
-    this.baseUrl = this.isGitHubPages ? window.location.origin : window.location.origin;
+    this.baseUrl = window.location.origin;
+    
+    // Environment-specific settings
+    if (this.isLocalDev) {
+      console.log('🔧 Running in local development mode');
+    } else if (this.isGitHubPages) {
+      console.log('🚀 Running on GitHub Pages');
+    } else {
+      console.log('🌐 Running in production mode');
+    }
   }
   
   connectedCallback() {
@@ -503,16 +511,40 @@ https://example.com/page3"></textarea>
     
     // Check if it's a URL
     if (content.startsWith('http://') || content.startsWith('https://')) {
+      // Try direct sitemap fetch with specific handling
       try {
-        const sitemapData = await this.fetchUrl(content);
+        const sitemapData = await this.fetchSitemap(content);
         return this.extractUrlsFromSitemap(sitemapData);
       } catch (error) {
-        throw new Error(`Failed to fetch sitemap from URL: ${error.message}`);
+        // If sitemap fetch fails, prompt user to paste content instead
+        this.showNotification('Cannot fetch sitemap URL due to CORS. Please paste the sitemap XML content directly.', 'warning');
+        throw new Error('Sitemap URL blocked by CORS. Please copy the sitemap XML content and paste it instead of the URL.');
       }
     } else {
       // Assume it's XML content
       return this.extractUrlsFromSitemap(content);
     }
+  }
+  
+  async fetchSitemap(url) {
+    // Try working CORS proxies for sitemaps
+    const sitemapProxies = [
+      'https://api.codetabs.com/v1/proxy?quest=',
+      'https://api.allorigins.win/raw?url=',
+      'https://corsproxy.io/?'
+    ];
+    
+    for (const proxy of sitemapProxies) {
+      try {
+        const response = await fetch(proxy + encodeURIComponent(url));
+        if (!response.ok) continue;
+        return await response.text();
+      } catch (error) {
+        continue;
+      }
+    }
+    
+    throw new Error('Failed to fetch');
   }
   
   extractUrlsFromSitemap(xmlContent) {
@@ -729,8 +761,10 @@ https://example.com/page3"></textarea>
           ...(proxy.headers || {})
         };
         
-        // Add timeout based on GitHub Pages environment
-        const timeout = this.isGitHubPages ? 20000 : 15000;
+        // Environment-specific timeout settings
+        const timeout = this.isLocalDev ? 10000 : // Local dev: faster
+                       this.isGitHubPages ? 20000 : // GitHub Pages: longer for static hosting
+                       15000; // Default: balanced
         
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -748,16 +782,7 @@ https://example.com/page3"></textarea>
           throw new Error(`${proxy.name} returned HTTP ${response.status}`);
         }
         
-        const contentType = response.headers.get('content-type') || '';
-        let data;
-        
-        if (contentType.includes('application/json')) {
-          data = await response.json();
-        } else {
-          data = await response.text();
-        }
-        
-        const htmlContent = proxy.parseResponse(data);
+        const htmlContent = await response.text();
         
         if (!htmlContent || typeof htmlContent !== 'string') {
           throw new Error(`${proxy.name} returned invalid content`);
@@ -910,16 +935,7 @@ https://example.com/page3"></textarea>
         
         if (!response.ok) continue;
         
-        const contentType = response.headers.get('content-type') || '';
-        let data;
-        
-        if (contentType.includes('application/json')) {
-          data = await response.json();
-        } else {
-          data = await response.text();
-        }
-        
-        const newContent = proxy.parseResponse(data);
+        const newContent = await response.text();
         
         if (!newContent || typeof newContent !== 'string') continue;
         
